@@ -1,14 +1,10 @@
-﻿using BuildingBlocks.CQRS;
-using CatlogApi.Models;
-using MediatR;
-using System.Xml.Linq;
-
-namespace CatlogApi.Products.CreateProduct;
+﻿namespace CatlogApi.Products.CreateProduct;
 
 public record CreateProductComand(string Name, string Description, List<string> Category, string ImageFile) : ICommand<CreateProductResult>;
 public record CreateProductResult(Guid id);
 
-internal class CreateProductCommandHandler : ICommandHandler<CreateProductComand, CreateProductResult>
+internal class CreateProductCommandHandler(IDocumentSession session) 
+    : ICommandHandler<CreateProductComand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductComand command, CancellationToken cancellationToken)
     {
@@ -26,10 +22,12 @@ internal class CreateProductCommandHandler : ICommandHandler<CreateProductComand
 
 
         //Save to DB
+        session.Store(product);
+        await session.SaveChangesAsync(cancellationToken);
 
         //Return result
 
-        return new CreateProductResult(Guid.NewGuid());
+        return new CreateProductResult(product.Id);
 
     }
 }
