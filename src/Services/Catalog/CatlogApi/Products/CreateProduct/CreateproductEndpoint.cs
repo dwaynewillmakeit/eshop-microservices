@@ -26,7 +26,6 @@ public class CreateproductEndpoint : ICarterModule
             .WithDescription("Create a product")
             ;
 
-        throw new NotImplementedException();
     }
 }
 
