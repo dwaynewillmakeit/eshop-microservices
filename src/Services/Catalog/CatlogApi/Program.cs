@@ -1,15 +1,21 @@
+using BuildingBlocks.Behaviors;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to  container
 
-builder.Services.AddCarter();
+var assembly = typeof(Program).Assembly;
+
 builder.Services.AddMediatR(config => {
 
-    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    config.RegisterServicesFromAssembly(assembly);
+
+    //Add validation behavior to mediator pipeline
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
 });
 
-//Register fluent validator
-builder.Services. AddValidatorsFromAssembly(typeof(Program).Assembly);
+//Register validators
+builder.Services. AddValidatorsFromAssembly(assembly);
 
 
 builder.Services.AddMarten(
@@ -17,6 +23,9 @@ builder.Services.AddMarten(
         options.Connection(builder.Configuration.GetConnectionString("Database")!); 
     })
     .UseLightweightSessions() ;
+
+builder.Services.AddCarter();
+
 
 
 var app = builder.Build();
