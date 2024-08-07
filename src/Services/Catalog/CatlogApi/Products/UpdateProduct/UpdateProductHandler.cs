@@ -1,9 +1,21 @@
 ﻿
 namespace CatlogApi.Products.UpdateProduct;
 
-public record UpdateProductCommand(Guid id, string Name, string Description, List<string> Category, string ImageFile, decimal Price): ICommand<UpdatedProductResult>;
+public record UpdateProductCommand(Guid Id, string Name, string Description, List<string> Category, string ImageFile, decimal Price): ICommand<UpdatedProductResult>;
 
 public record UpdatedProductResult(bool IsSuccess);
+
+public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
+{
+    public UpdateProductCommandValidator()
+    {
+        RuleFor(x => x.Id).NotEmpty().WithMessage("ID is required");
+        RuleFor(x => x.Name).NotEmpty().Length(2,150).WithMessage("Name must be between 2 and 159 characters");
+        RuleFor(x => x.Category).NotEmpty().WithMessage("Category is required");
+        RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile is required");
+        RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price is must be greater than zero");
+    }
+}
 
 
 internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger) : ICommandHandler<UpdateProductCommand, UpdatedProductResult>
@@ -12,7 +24,7 @@ internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<Upd
     {
         logger.LogInformation("Updating product with command {@Command} ", command);
 
-        var product = await session.LoadAsync<Product>(command.id,cancellationToken);
+        var product = await session.LoadAsync<Product>(command.Id,cancellationToken);
 
         if (product == null)
         {
