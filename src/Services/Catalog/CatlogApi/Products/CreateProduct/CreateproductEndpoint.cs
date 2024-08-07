@@ -1,7 +1,7 @@
 ﻿namespace CatlogApi.Products.CreateProduct;
-    public record CreateProductRequest(string Name, string Description, List<string> Category, string ImageFile);
+    public record CreateProductRequest(string Name, string Description, List<string> Category, string ImageFile, decimal Price);
 
-    public record CreateProductResponse(Guid id);
+    public record CreateProductResponse(Guid Id);
 
 public class CreateproductEndpoint : ICarterModule
 {
@@ -16,7 +16,7 @@ public class CreateproductEndpoint : ICarterModule
 
                 var response = result.Adapt<CreateProductResponse>();
 
-                return Results.Created($"/products/{response.id}",response);
+                return Results.Created($"/products/{response.Id}",response);
             }
             )
             .WithName("CreateProduct")

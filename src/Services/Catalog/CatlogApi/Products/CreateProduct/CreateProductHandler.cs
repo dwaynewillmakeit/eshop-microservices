@@ -1,6 +1,6 @@
 ﻿namespace CatlogApi.Products.CreateProduct;
 
-public record CreateProductComand(string Name, string Description, List<string> Category, string ImageFile) : ICommand<CreateProductResult>;
+public record CreateProductComand(string Name, string Description, List<string> Category, string ImageFile, decimal Price) : ICommand<CreateProductResult>;
 public record CreateProductResult(Guid id);
 
 internal class CreateProductCommandHandler(IDocumentSession session) 
