@@ -10,7 +10,7 @@
     {
         public async Task<GetProductsByCategoryResult> Handle(GetProductsByCategoryQuery query, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Getting products by category",query);
+            _logger.LogInformation("Getting products by category {@Query}",query);
 
             var products =  await session.Query<Product>()
                 .Where(p => p.Category.Contains(query.Category))

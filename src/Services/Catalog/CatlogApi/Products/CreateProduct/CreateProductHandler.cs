@@ -1,9 +1,21 @@
-﻿namespace CatlogApi.Products.CreateProduct;
+﻿
+namespace CatlogApi.Products.CreateProduct;
 
 public record CreateProductComand(string Name, string Description, List<string> Category, string ImageFile, decimal Price) : ICommand<CreateProductResult>;
 public record CreateProductResult(Guid id);
 
-internal class CreateProductCommandHandler(IDocumentSession session) 
+public class CreateProductComandValidator : AbstractValidator<CreateProductComand>
+{
+    public CreateProductComandValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required");
+        RuleFor(x => x.Category).NotEmpty().WithMessage("Category is required");
+        RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile is required");
+        RuleFor(x => x.Price).NotEmpty().WithMessage("Price is required");
+    }
+}
+
+internal class CreateProductCommandHandler(IDocumentSession session,IValidator<CreateProductComand> validator) 
     : ICommandHandler<CreateProductComand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(CreateProductComand command, CancellationToken cancellationToken)
@@ -11,6 +23,14 @@ internal class CreateProductCommandHandler(IDocumentSession session)
         //Business logic to create a product
 
         //Create product entity 
+
+        var result = await validator.ValidateAsync(command, cancellationToken);
+        var errors = result.Errors.Select(x => x.ErrorMessage).ToList();
+
+        if (errors.Any()) {
+
+            throw new ValidationException(errors.FirstOrDefault());
+        }
 
         var product = new Product
         {
