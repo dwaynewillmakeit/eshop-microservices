@@ -17,7 +17,7 @@ namespace CatlogApi.Products.GetProductById
 
             if(product == null)
             {
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException(query.id);
             }
             return new GetProductByIdResult(product);
         }
