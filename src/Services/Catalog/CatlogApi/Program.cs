@@ -12,6 +12,7 @@ builder.Services.AddMediatR(config => {
 
     //Add validation behavior to mediator pipeline
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    config.AddOpenBehavior(typeof(LoggingBehaviour<,>));
 });
 
 //Register validators
