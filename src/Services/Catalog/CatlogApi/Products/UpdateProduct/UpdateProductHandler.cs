@@ -18,12 +18,10 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 }
 
 
-internal class UpdateProductCommandHandler(IDocumentSession session, ILogger<UpdateProductCommandHandler> logger) : ICommandHandler<UpdateProductCommand, UpdatedProductResult>
+internal class UpdateProductCommandHandler(IDocumentSession session) : ICommandHandler<UpdateProductCommand, UpdatedProductResult>
 {
     public async Task<UpdatedProductResult> Handle(UpdateProductCommand command, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Updating product with command {@Command} ", command);
-
+    {        
         var product = await session.LoadAsync<Product>(command.Id,cancellationToken);
 
         if (product == null)
