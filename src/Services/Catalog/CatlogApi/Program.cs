@@ -38,6 +38,9 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>() ;
 
 builder.Services.AddHealthChecks().AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddCarter();
 
@@ -47,6 +50,13 @@ var app = builder.Build();
 
 
 //Configure the HTTP request pipeline
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Carter API V1");
+    c.RoutePrefix = string.Empty;  // Set the Swagger UI at the app's root
+});
 
 app.MapCarter();
 
