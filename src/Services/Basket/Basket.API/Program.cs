@@ -17,7 +17,14 @@ builder.Services.AddMediatR(config => {
     config.AddOpenBehavior(typeof(LoggingBehaviour<,>));
 });
 
-builder.Services.AddScoped<IBasketRepository, BasketRepository>();  
+builder.Services.AddScoped<IBasketRepository, BasketRepository>(); 
+builder.Services.Decorate<IBasketRepository,CachedBasketRepository>();
+
+builder.Services.AddStackExchangeRedisCache(options => {
+
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+
+});
 
 //Register validators
 builder.Services.AddValidatorsFromAssembly(assembly);
