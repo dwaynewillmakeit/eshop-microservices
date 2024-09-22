@@ -1,3 +1,4 @@
+using Basket.API.Data;
 using BuildingBlocks.Behaviors;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,8 @@ builder.Services.AddMediatR(config => {
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
     config.AddOpenBehavior(typeof(LoggingBehaviour<,>));
 });
+
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();  
 
 //Register validators
 builder.Services.AddValidatorsFromAssembly(assembly);
