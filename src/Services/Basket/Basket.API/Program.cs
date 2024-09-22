@@ -15,6 +15,9 @@ builder.Services.AddMediatR(config => {
     config.AddOpenBehavior(typeof(LoggingBehaviour<,>));
 });
 
+//Register validators
+builder.Services.AddValidatorsFromAssembly(assembly);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
