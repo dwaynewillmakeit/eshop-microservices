@@ -7,7 +7,7 @@ namespace Basket.API.Data
         {
             var basket = await session.LoadAsync<ShoppingCart>(userName, cancellationToken);
 
-            return basket is null ? throw new Exception() : basket;
+            return basket is null ? throw new BasketNotFoundException(userName) : basket;
         }
 
         public async Task<ShoppingCart> StoreBasket(ShoppingCart shoppingCart, CancellationToken cancellationToken = default)

@@ -1,5 +1,6 @@
 using Basket.API.Data;
 using BuildingBlocks.Behaviors;
+using BuildingBlocks.Exceptions.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,8 @@ builder.Services.AddMarten(options => {
     
 }).UseLightweightSessions()
     ;
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
 
