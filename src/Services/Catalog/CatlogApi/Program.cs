@@ -36,7 +36,8 @@ if (builder.Environment.IsDevelopment()) {
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>() ;
 
-builder.Services.AddHealthChecks().AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Database")!);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
