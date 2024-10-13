@@ -1,12 +1,14 @@
 using Basket.API.Data;
 using BuildingBlocks.Behaviors;
 using BuildingBlocks.Exceptions.Handler;
+using Discount.Grpc;
 using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to container
 
+//Application Services
 var assembly = typeof(Program).Assembly;
 
 builder.Services.AddMediatR(config =>
@@ -19,6 +21,19 @@ builder.Services.AddMediatR(config =>
     config.AddOpenBehavior(typeof(LoggingBehaviour<,>));
 });
 
+builder.Services.AddCarter();
+
+
+//Data Services
+builder.Services.AddMarten(options =>
+{
+
+    options.Connection(builder.Configuration.GetConnectionString("Database")!);
+
+    options.Schema.For<ShoppingCart>().Identity(x => x.UserName);
+
+}).UseLightweightSessions();
+
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
 
@@ -29,25 +44,26 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 });
 
+//Grpc Services
+
+builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
+    options => {
+
+        options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
+
+    });
+
+//Cross Cutting Services
+
 //Register validators
 builder.Services.AddValidatorsFromAssembly(assembly);
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCarter();
-
-builder.Services.AddMarten(options =>
-{
-
-    options.Connection(builder.Configuration.GetConnectionString("Database")!);
-
-    options.Schema.For<ShoppingCart>().Identity(x => x.UserName);
-
-}).UseLightweightSessions();
-
-
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("Database")!)
     .AddRedis(builder.Configuration.GetConnectionString("Redis")!)
