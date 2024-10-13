@@ -51,6 +51,19 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
 
         options.Address = new Uri(builder.Configuration["GrpcSettings:DiscountUrl"]!);
 
+
+    }).ConfigurePrimaryHttpMessageHandler(() => {
+
+        if(builder.Environment.IsProduction())
+            return new HttpClientHandler();
+
+        var handler = new HttpClientHandler {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+
+
+        return handler;
+    
     });
 
 //Cross Cutting Services
