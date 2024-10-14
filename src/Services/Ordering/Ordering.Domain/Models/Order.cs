@@ -37,7 +37,7 @@ public class Order : Aggregate<OrderId>
             Status = OrderStatus.Pending
         };
 
-        //order.AddDomainEvent(new OrderCreatedEvent(order));
+        order.AddDomainEvent(new OrderCreatedEvent(order));
 
         return order;
     }
@@ -55,7 +55,7 @@ public class Order : Aggregate<OrderId>
         Payment = payment;
         Status = orderStatus;
 
-        //order.AddDomainEvent(new OrderUpdatedEvent(order));
+        AddDomainEvent(new OrderUpdatedEvent(this));
 
 
     }
