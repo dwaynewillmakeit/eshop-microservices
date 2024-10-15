@@ -11,6 +11,10 @@ namespace Ordering.Infrastructure
         {
             var databaseConnectionString = configuration.GetConnectionString("Database");
 
+            services.AddDbContext<ApplicationDbContext>(
+                options => options.UseSqlServer(databaseConnectionString)
+                );
+            //services.AddScoped<IApplicationDbContext, ApplicationDbContext>()
 
             return services;
         }
