@@ -12,7 +12,13 @@ namespace Ordering.Infrastructure
             var databaseConnectionString = configuration.GetConnectionString("Database");
 
             services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(databaseConnectionString)
+                options => {
+
+                    options.AddInterceptors(new AuditableEntityInterceptor());
+                    options.UseSqlServer(databaseConnectionString);
+
+                }
+                        
                 );
             //services.AddScoped<IApplicationDbContext, ApplicationDbContext>()
 
