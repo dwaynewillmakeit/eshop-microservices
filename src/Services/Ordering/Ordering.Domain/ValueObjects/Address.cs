@@ -8,7 +8,7 @@ public record Address
     public string AddressLine { get; } = default!;
     public string Country { get; } = default!;
     public string State { get; } = default!;
-    public string ZipeCode { get; } = default!;
+    public string ZipCode { get; } = default!;
 
     protected Address() { }
 
@@ -21,7 +21,7 @@ public record Address
         AddressLine = addressLine;
         Country = country;
         State = state;
-        ZipeCode = zipeCode;
+        ZipCode = zipeCode;
     }
 
     public static Address Of(

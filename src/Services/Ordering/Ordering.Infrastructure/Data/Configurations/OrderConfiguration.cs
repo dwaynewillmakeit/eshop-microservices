@@ -59,7 +59,7 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasMaxLength(50)
             .IsRequired();
 
-            addressBuilder.Property(a => a.ZipeCode)
+            addressBuilder.Property(a => a.ZipCode)
             .HasMaxLength(5)
             .IsRequired();
 
@@ -92,7 +92,7 @@ internal class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasMaxLength(50)
             .IsRequired();
 
-            addressBuilder.Property(a => a.ZipeCode)
+            addressBuilder.Property(a => a.ZipCode)
             .HasMaxLength(5)
             .IsRequired();
 
